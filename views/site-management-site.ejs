@@ -1,0 +1,425 @@
+<%- include("partials/header") %>
+
+<body id="page-top">
+
+  <!-- Page Wrapper -->
+  <div id="wrapper">
+
+    <%- include("partials/sidebar") %>
+
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+
+      <!-- Main Content -->
+      <div id="content">
+
+        <%- include("partials/topbar") %>
+
+        <!-- Begin Page Content -->
+        <div class="container-fluid">
+
+          <!-- Page Heading -->
+          <div class="d-flex flex-row justify-content-between mb-4">
+            <h1 class="h3 text-gray-800"><a href="/site-management">Site Management</a> <span
+                class="directory-nav title-case"> > <a href="/site-management/<%= type %>"><%= type %></a> >
+                <%= category %></span></h1>
+            <% if (department == "Business Development") { %>
+            <% var userHasCreateAccess = scope.find(function(scope) {
+                return scope == "create" ? true : false;
+              });
+              if (userHasCreateAccess) {
+            %>
+            <span>
+              <a href="#" data-toggle="modal" class="btn btn-info btn-icon-split" id="btnAddSiteFormToggle">
+                <span class="icon text-white-50">
+                  <i class="fas fa-plus" id="btnToggleFormIcon"></i>
+                </span>
+                <span class="text" id="btnToggleFormText">Add Site</span>
+              </a>
+            </span>
+            <% } %>
+            <% } %>
+          </div>
+
+          <div id="site-table">
+            <div class="d-flex flex-row justify-content-around flex-wrap">
+
+              <!-- DataTales Example -->
+              <div class="col-md-12 card shadow mb-4 p-0">
+                <div class="card-header py-3">
+                  <h6 class="m-0 font-weight-bold text-primary">Site List: </h6>
+                </div>
+                <div class="card-body site-table">
+                  <div class="table-responsive">
+                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                      <thead>
+                        <tr>
+                          <th>Site Name</th>
+                          <th>Sub Category</th>
+                          <th>Address</th>
+                          <th>Execution</th>
+                          <th>Measurement</th>
+                          <% if (department == "Sales") { %>
+                          <th>Sales Rate</th>
+                          <% } else { %>
+                          <th>Contact Person</th>
+                          <% } %>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <% if (sites.length == 0) { %>
+                        <tr>
+                          <td colspan=6>No site found yet in this category. Please add, thanks!</td>
+                        </tr>
+                        <% } else { %>
+                        <%
+                          for (var i = 0; i < sites.length; i++) {
+                            var t1 = new Date(sites[i].contract_duration_to).getTime(),
+                            t2 = new Date(moment().format("YYYY/MM/DD HH:mm:ss")).getTime();
+
+                            var nod = parseInt((t2 - t1)/(24 * 3600 * 1000));
+                            if (nod > 0) { 
+                        %>
+                        <% if (type == "property") { %>
+                        <tr style="background: rgba(255, 56, 56, 0.5); color: black"
+                          onclick="viewSiteDetail('<%= type %>', <%= category_id %>, <%= sites[i].site_id %>)">
+                          <td class="upper-case"><%= sites[i].site %></td>
+                          <td class="title-case"><%= sites[i].sub_category %></td>
+                          <td class="title-case">
+                            <%= sites[i].address + ", " + sites[i].municipality + ", " + sites[i].province %></td>
+                          <td class="title-case"><%= (sites[i].category) ? sites[i].format : "-Not Set Yet-" %></td>
+                          <td><%= (sites[i].measurement) ? sites[i].measurement : "-Not Set Yet-" %></td>
+                          <% if (department == "Sales") { %>
+                          <td>
+                            <%= (sites[i].sales_rate) ? "P " + sites[i].sales_rate.toLocaleString() : "-Not Set Yet-" %>
+                          </td>
+                          <% } else { %>
+                          <td class="title-case">
+                            <%= (sites[i].contact_person) ? sites[i].contact_person : "-Not Set Yet-" %></td>
+                          <% } %>
+                        </tr>
+                        <% } else { %>
+                        <tr onclick="viewSiteDetail('<%= type %>', <%= category_id %>, <%= sites[i].site_id %>)">
+                          <td class="upper-case"><%= sites[i].site %></td>
+                          <td class="title-case"><%= sites[i].sub_category %></td>
+                          <td class="title-case">
+                            <%= sites[i].address + ", " + sites[i].municipality + ", " + sites[i].province %></td>
+                          <td class="title-case"><%= (sites[i].category) ? sites[i].format : "-Not Set Yet-" %></td>
+                          <td><%= (sites[i].measurement) ? sites[i].measurement : "-Not Set Yet-" %></td>
+                          <% if (department == "Sales") { %>
+                          <td>
+                            <%= (sites[i].sales_rate) ? "P " + sites[i].sales_rate.toLocaleString() : "-Not Set Yet-" %>
+                          </td>
+                          <% } else { %>
+                          <td class="title-case">
+                            <%= (sites[i].contact_person) ? sites[i].contact_person : "-Not Set Yet-" %></td>
+                          <% } %>
+                        </tr>
+                        <% } %>
+                        <% } else { %>
+                        <tr onclick="viewSiteDetail('<%= type %>', <%= category_id %>, <%= sites[i].site_id %>)">
+                          <td class="upper-case"><%= sites[i].site %></td>
+                          <td class="title-case"><%= sites[i].sub_category %></td>
+                          <td class="title-case">
+                            <%= sites[i].address + ", " + sites[i].municipality + ", " + sites[i].province %></td>
+                          <td class="title-case"><%= (sites[i].category) ? sites[i].format : "-Not Set Yet-" %></td>
+                          <td><%= (sites[i].measurement) ? sites[i].measurement : "-Not Set Yet-" %></td>
+                          <% if (department == "Sales") { %>
+                          <td>
+                            <%= (sites[i].sales_rate) ? "P " + sites[i].sales_rate.toLocaleString() : "-Not Set Yet-" %>
+                          </td>
+                          <% } else { %>
+                          <td class="title-case">
+                            <%= (sites[i].contact_person) ? sites[i].contact_person : "-Not Set Yet-" %></td>
+                          <% } %>
+                        </tr>
+                        <%
+                            }
+                          }
+                        %>
+                        <% } %>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <div id="site-form" class="site-form" style="display: none;">
+            <div class="d-flex flex-row justify-content-around flex-wrap">
+              <div class="col-md-12 card shadow mb-4 p-0">
+                <form action="#" onsubmit="saveSite(); return false">
+                  <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">ADD NEW SITE: </h6>
+                  </div>
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-md-6">
+                        <h5>Site Details:</h5>
+                        <div class="col-md-12">
+                          <div class="form-group">
+                            <label for="txtSiteName">Type:</label>
+                            <input type="text" class="form-control title-case" id="txtSiteType" value="<%= type %>"
+                              readonly placeholder="">
+                          </div>
+                          <div class="form-group">
+                            <label for="txtCategory">Category:</label>
+                            <input type="hidden" id="txtCategoryId" value="<%= category_id %>">
+                            <input type="text" class="form-control title-case" id="txtCategory" value="<%= category %>"
+                              readonly placeholder="">
+                          </div>
+                          <div class="form-group">
+                            <label for="txtSubCategory">Sub Category:</label>
+                            <input type="text" class="form-control" id="txtSubCategory" placeholder="">
+                          </div>
+                          <div class="form-group">
+                            <label for="txtSiteName">Site Name: <span style="color: red;">*</span></label>
+                            <input type="text" class="form-control" id="txtSiteName" placeholder="">
+                          </div>
+                          <div class="form-group">
+                            <label for="txtFootTraffic">Foot Traffic: <span style="color: red;">*</span></label>
+                            <input type="number" class="form-control" id="txtFootTraffic" placeholder="">
+                          </div>
+                          <div class="form-group">
+                            <label for="txtRentalRate">Rental Rate: <% if (type == "property") { %><span
+                                style="color: red;">*</span><% } %></label>
+                            <input type="number" step="any" class="form-control" id="txtRentalRate" placeholder="">
+                          </div>
+                        </div>
+                        <h5 class="mt-3">Site Contract Duration:</h5>
+                        <div class="col-md-12">
+                          <div class="col-md-12 row p-0">
+                            <div class="col-md-6 p-0">
+                              <div class="form-group col-md-12">
+                                <label for="dateContractDurationFrom">Start: <% if (type == "property") { %><span
+                                    style="color: red;">*</span><% } %></label>
+                                <input type="date" class="form-control" id="dateContractDurationFrom"
+                                  placeholder="yyyy-mm-dd">
+                              </div>
+                            </div>
+                            <div class="col-md-6 p-0">
+                              <div class="form-group col-md-12">
+                                <label for="dateContractDurationTo">End: <% if (type == "property") { %><span
+                                    style="color: red;">*</span><% } %></label>
+                                <input type="date" class="form-control" id="dateContractDurationTo"
+                                  placeholder="yyyy-mm-dd">
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <h5 class="mt-3">Other Details:</h5>
+                        <div class="col-md-12">
+                          <div class="form-group">
+                            <label for="txtSiteRemark">Site Remarks:</label>
+                            <textarea class="form-control" id="txtSiteRemark" rows="5" style="resize: none;"></textarea>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <h5>Site Location:</h5>
+                        <div class="col-md-12">
+                          <div class="form-group">
+                            <label for="selectRegion">Region: <span style="color: red;">*</span></label>
+                            <select class="form-control" id="selectRegion" onchange="setProvince()"></select>
+                          </div>
+                          <div class="form-group">
+                            <label for="selectProvice">Province: <span style="color: red;">*</span></label>
+                            <select class="form-control" id="selectProvince" onchange="setMunicipalityCity()"></select>
+                          </div>
+                          <div class="form-group">
+                            <label for="selectMunicipalityCity">Municipality/City: <span
+                                style="color: red;">*</span></label>
+                            <select class="form-control" id="selectMunicipalityCity"></select>
+                          </div>
+                          <div class="form-group">
+                            <label for="txtAddress">Address: <span style="color: red;">*</span></label>
+                            <input type="text" class="form-control title-case" id="txtAddress" placeholder="">
+                          </div>
+                          <div class="col-md-12 row p-0">
+                            <div class="col-md-6 p-0">
+                              <div class="form-group col-md-12">
+                                <label for="txtLatitude">Latitude: <span style="color: red;">*</span></label>
+                                <input type="number" step="any" class="form-control" id="txtLatitude" placeholder="">
+                              </div>
+                            </div>
+                            <div class="col-md-6 p-0">
+                              <div class="form-group col-md-12">
+                                <label for="txtLongitude">Longitude: <span style="color: red;">*</span></label>
+                                <input type="number" step="any" class="form-control" id="txtLongitude" placeholder="">
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <h5 class="mt-3">Site Contact Information:</h5>
+                        <div class="col-md-12">
+                          <div class="form-group">
+                            <label for="txtContactPerson">Contact Person:</label>
+                            <input type="text" class="form-control" id="txtContactPerson" placeholder="">
+                          </div>
+                          <div class="form-group">
+                            <label for="txtContactDesignation">Contact Designation:</label>
+                            <input type="text" class="form-control" id="txtContactDesignation" placeholder="">
+                          </div>
+                          <div class="form-group">
+                            <label for="txtContactNumber">Contact Number:</label>
+                            <input type="text" class="form-control" id="txtContactNumber" placeholder="">
+                          </div>
+                          <div class="form-group">
+                            <label for="txtContactEmail">Contact Email:</label>
+                            <input type="text" class="form-control" id="txtContactEmail" placeholder="">
+                          </div>
+                          <div class="form-group">
+                            <label for="txtBDOfficerName">BD Officer Name:</label>
+                            <input type="text" class="form-control" id="txtBDOfficerName" placeholder="">
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-12">
+                        <hr />
+                        <h5>Site Possible Execution:<a href="#" data-toggle="modal"
+                            class="btn btn-sm btn-info btn-icon-split ml-5" data-target="#addExecutionModal"
+                            id="btnAddExecutionToggle">
+                            <span class="icon text-white-50">
+                              <i class="fas fa-plus" id=""></i>
+                            </span>
+                            <span class="text" id="">Add Execution Format</span>
+                          </a></h5>
+                        <div class="col-md-12">
+                          <div class="row">
+                            <div class="col-md-6">
+                              <div class="form-group">
+                                <label for="selectPossibleExecutionCategory">Category: <span
+                                    style="color: red;">*</span></label>
+                                <select class="form-control title-case" id="selectPossibleExecutionCategory"
+                                  onchange="setPossibleExecutionFormat()"></select>
+                              </div>
+                              <div class="form-group">
+                                <label for="selectPossibleExecutionFormat">Format: <span
+                                    style="color: red;">*</span></label>
+                                <select class="form-control title-case" id="selectPossibleExecutionFormat"></select>
+                              </div>
+                              <div class="form-group">
+                                <label for="txtPossibleExecutionMeasurement">Measurement: <span
+                                    style="color: red;">*</span></label>
+                                <input type="text" class="form-control" id="txtPossibleExecutionMeasurement"
+                                  placeholder="">
+                              </div>
+                              <div class="form-group">
+                                <label for="txtPossibleExecutionRentalRate">Rental Rate:
+                                  <% if (type == "partner") { %><span style="color: red;">*</span><% } %></label>
+                                <input type="number" step="any" class="form-control" id="txtPossibleExecutionRentalRate"
+                                  placeholder="">
+                              </div>
+                              <button type="button" class="btn btn-md btn-success"
+                                onclick="addSelectedPossibleExecution()">Add</button>
+                            </div>
+                            <div class="col-md-6">
+                              <div class="col-md-12">
+                                <div class="form-group">
+                                  <label>Selected Possible Execution:</label><br />
+                                  <div class="d-flex flex-wrap justify-content-around"
+                                    id="txtSelectedPossibleExecution">
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card-footer py-3">
+                    <input type="submit" id="btnAddSite" class="col-md-12 btn btn-lg btn-success" value="Save Site"
+                      style="font-size: 1rem">
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <!-- /.container-fluid -->
+
+      </div>
+      <!-- End of Main Content -->
+
+      <div class="modal fade" id="addExecutionModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Add Possible Execution Format</h5>
+              <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">×</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <form>
+                <div class="form-group">
+                  <label for="addExecutionCategory">Category:</label>
+                  <select class="form-control title-case" id="addExecutionCategory"
+                    onchange="checkExecutionCategory()"></select>
+                </div>
+                <div class="form-group" id="addExecutionNewCategoryContainer" style="display: none;">
+                  <label for="addExecutionNewCategory">New Category:</label>
+                  <input type="text" class="form-control" id="addExecutionNewCategory" placeholder="">
+                </div>
+                <div class="form-group">
+                  <label for="addExecutionFormat">Format:</label>
+                  <input type="text" class="form-control" id="addExecutionFormat" placeholder="">
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button class="btn btn-danger" type="button" data-dismiss="modal">Cancel</button>
+              <button id="btnAddExecution" class="btn btn-primary" type="button"
+                onclick="addNewExecution()">Add</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <%- include("partials/footer") %>
+
+    </div>
+    <!-- End of Content Wrapper -->
+
+  </div>
+  <!-- End of Page Wrapper -->
+
+  <!-- Scroll to Top Button-->
+  <a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+  </a>
+
+  <!-- Bootstrap core JavaScript-->
+  <script src="/vendor/jquery/jquery.min.js"></script>
+  <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Core plugin JavaScript-->
+  <script src="/vendor/jquery-easing/jquery.easing.min.js"></script>
+
+  <!-- Custom scripts for all pages-->
+  <script src="/js/sb-admin-2.min.js"></script>
+
+  <!-- Page level plugins -->
+  <script src="/vendor/datatables/jquery.dataTables.min.js"></script>
+  <script src="/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+
+  <!-- Page level custom scripts -->
+  <script src="/js/demo/datatables-demo.js"></script>
+  <script src="/js/toastr.min.js"></script>
+  <script src="/js/lazyload.js"></script>
+
+  <script src="/js/cities.js"></script>
+  <script src="/js/provinces.js"></script>
+  <script src="/js/regions.js"></script>
+  <script src="/js/notifications.js"></script>
+
+  <script src="/js/site-management.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,676 @@
+<%- include("partials/header") %>
+
+<body id="page-top">
+
+  <!-- Page Wrapper -->
+  <div id="wrapper">
+
+    <%- include("partials/sidebar") %>
+
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+
+      <!-- Main Content -->
+      <div id="content">
+
+        <%- include("partials/topbar") %>
+
+        <!-- Begin Page Content -->
+        <div class="container-fluid">
+
+          <!-- Page Heading -->
+          <div class="d-flex flex-row justify-content-between mb-4">
+            <h1 class="h3 text-gray-800"><a href="/site-management">Site Management</a> <span class="directory-nav title-case"> > <a href="/site-management/<%= type %>"><%= type %></a> > <a href="/site-management/<%= type %>/<%= category_id %>"><%= category %></a> > <%= detail.site %></span></h1>
+            <% var userHasCreateAccess = scope.find(function(scope) {
+                return scope == "create" ? true : false;
+              }),
+              userHasUpdateAccess = scope.find(function(scope) {
+                return scope == "update" ? true : false;
+              }),
+              userHasDeleteAccess = scope.find(function(scope) {
+                return scope == "delete" ? true : false;
+              });
+              userHasSiteDeleteAccess = scope.find(function(scope) {
+                return scope == "site_delete" ? true : false;
+              });
+            %>
+          </div>
+
+          <div>
+            <div class="d-flex flex-row justify-content-around flex-wrap">
+
+              <!-- DataTales Example -->
+              <div class="col-md-12 card shadow mb-4 p-0">
+                <div class="card-header py-3">
+                  <h6 class="m-0 font-weight-bold text-primary upper-case">ID: <%= detail.site_id %> - <%= detail.site %></h6>
+                </div>
+                <div class="card-body">
+                  <nav>
+                    <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                      <a class="nav-item nav-link <%= (tab == "details") ? "active" : "" %>" id="nav-details-tab" data-toggle="tab" href="#nav-details" role="tab" aria-controls="nav-details" aria-selected="true"><i class="fas fa-fw fa-info mr-2"></i><b>Details</b></a>
+                      <a class="nav-item nav-link <%= (tab == "gallery") ? "active" : "" %>" id="nav-photos-tab" data-toggle="tab" href="#nav-photos" role="tab" aria-controls="nav-photos" aria-selected="false"><i class="fas fa-fw fa-images mr-2"></i>Site Photos</a>
+                      <a class="nav-item nav-link <%= (tab == "execution") ? "active" : "" %>" id="nav-possible-execution-tab" data-toggle="tab" href="#nav-possible-execution" role="tab" aria-controls="nav-possible-execution" aria-selected="false"><i class="fas fa-fw fa-tasks mr-2"></i><b>Possible Executions</b></a>
+                      <a class="nav-item nav-link <%= (tab == "projects") ? "active" : "" %>" id="nav-past-projects-tab" data-toggle="tab" href="#nav-past-projects" role="tab" aria-controls="nav-past-projects" aria-selected="false"><i class="fas fa-fw fa-file mr-2"></i>Past Projects</a>
+                      <a class="nav-item nav-link <%= (tab == "map") ? "active" : "" %>" id="nav-map-tab" data-toggle="tab" href="#nav-map" role="tab" aria-controls="nav-map" aria-selected="false"><i class="fas fa-fw fa-map mr-2"></i>View in Map</a>
+                    </div>
+                  </nav>
+                  <div class="tab-content" id="nav-tabContent">
+                    <div class="tab-pane fade <%= (tab == "details") ? "show active" : "" %> site-form" id="nav-details" role="tabpanel" aria-labelledby="nav-details-tab">
+                      <div class="row mt-3">
+                        <div class="col-md-6">
+                          <h5>Site Details:</h5>
+                          <div class="col-md-12">
+                            <input type="hidden" id="txtSiteId" value="<%= detail.site_id %>">
+                            <div class="form-group">
+                              <label for="selectSiteType">Type:</label>
+                              <input type="text" class="form-control title-case" id="txtSiteType" value="<%= detail.type %>" placeholder="" disabled>
+                            </div>
+                            <div class="form-group">
+                              <label for="txtCategory">Category:</label>
+                              <input type="text" class="form-control title-case" id="txtCategory" value="<%= category %>" readonly placeholder="" disabled>
+                            </div>
+                            <div class="form-group">
+                              <label for="txtSubCategory">Sub Category:</label>
+                              <input type="text" class="form-control" id="txtSubCategory" value="<%= detail.sub_category %>" placeholder="" disabled>
+                            </div>
+                            <div class="form-group">
+                              <label for="txtSiteName">Site Name: <span style="color: red;">*</span></label>
+                              <input type="text" class="form-control" id="txtSiteName" value="<%= detail.site %>" placeholder="" disabled>
+                            </div>
+                            <div class="form-group">
+                              <label for="txtFootTraffic">Foot Traffic: <span style="color: red;">*</span></label>
+                              <input type="number" class="form-control" id="txtFootTraffic" value="<%= detail.foot_traffic %>" placeholder="" disabled>
+                            </div>
+                            <div class="form-group">
+                              <label for="txtRentalRate">Rental Rate: <% if (type == "property") { %><span style="color: red;">*</span><% } %></label>
+                              <input type="number" class="form-control" id="txtRentalRate" value="<%= detail.rental_rate %>" placeholder="" disabled>
+                            </div>
+                          </div>
+                          <h5 class="mt-3">Site Contract Duration:</h5>
+                          <div class="col-md-12">
+                            <div class="col-md-12 row p-0">
+                              <div class="col-md-6 p-0">
+                                <div class="form-group col-md-12">
+                                  <label for="dateContractDurationFrom">Start: <% if (type == "property") { %><span style="color: red;">*</span><% } %></label>
+                                  <input type="date" class="form-control" id="dateContractDurationFrom" value="<%= moment(detail.contract_duration_from).format("YYYY-MM-DD") %>" placeholder="" disabled>
+                                </div>
+                              </div>
+                              <div class="col-md-6 p-0">
+                                <div class="form-group col-md-12">
+                                  <label for="dateContractDurationTo">End: <% if (type == "property") { %><span style="color: red;">*</span><% } %></label>
+                                  <input type="date" class="form-control" id="dateContractDurationTo" value="<%= moment(detail.contract_duration_to).format("YYYY-MM-DD") %>" placeholder="" disabled>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <h5 class="mt-3">Other Details:</h5>
+                          <div class="col-md-12">
+                            <div class="form-group">
+                              <label for="txtSiteRemark">Site Remarks:</label>
+                              <textarea class="form-control" id="txtSiteRemark" rows="5" style="resize: none;" disabled><%= detail.remark %></textarea>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                          <h5>Site Location:</h5>
+                          <div class="col-md-12">
+                            <div class="form-group">
+                              <label for="selectRegion">Region: <span style="color: red;">*</span></label>
+                              <select class="form-control" id="selectRegion" onchange="setProvince()" style="display: none;"></select>
+                              <input type="text" class="form-control title-case" id="txtRegion" value="<%= detail.region %>" placeholder="" disabled>
+                            </div>
+                            <div class="form-group">
+                              <label for="selectProvice">Province: <span style="color: red;">*</span></label>
+                              <select class="form-control" id="selectProvince" onchange="setMunicipalityCity()" style="display: none;"></select>
+                              <input type="text" class="form-control title-case" id="txtProvince" value="<%= detail.province %>" placeholder="" disabled>
+                            </div>
+                            <div class="form-group">
+                              <label for="selectMunicipalityCity">Municipality/City: <span style="color: red;">*</span></label>
+                              <select class="form-control" id="selectMunicipalityCity" onchange="setLocationHasChanged()" style="display: none;"></select>
+                              <input type="text" class="form-control title-case" id="txtMunicipalityCity" value="<%= detail.municipality %>" placeholder="" disabled>
+                            </div>
+                            <div class="form-group">
+                              <label for="txtAddress">Address: <span style="color: red;">*</span></label>
+                              <input type="text" class="form-control title-case" id="txtAddress" value="<%= detail.address %>" placeholder="" disabled>
+                            </div>
+                            <div class="col-md-12 row p-0">
+                              <div class="col-md-6 p-0">
+                                <div class="form-group col-md-12">
+                                  <label for="txtLatitude">Latitude: <span style="color: red;">*</span></label>
+                                  <input type="number" step="any" class="form-control" id="txtLatitude" value="<%= detail.latitude %>" placeholder="" disabled>
+                                </div>
+                              </div>
+                              <div class="col-md-6 p-0">
+                                <div class="form-group col-md-12">
+                                  <label for="txtLongitude">Longitude: <span style="color: red;">*</span></label>
+                                  <input type="number" step="any" class="form-control" id="txtLongitude" value="<%= detail.longitude %>" placeholder="" disabled>
+                                </div>
+                              </div>
+                              <div class="col-md-12 p-0">
+                                <center><a href="#nav-map" onclick="viewInMap()">View in map</a></center>
+                              </div>
+                            </div>
+                          </div>
+                          <% if (department == "Business Development" || department == "Executives") { %>
+                          <h5 class="mt-3">Site Contact Information:</h5>
+                          <div class="col-md-12">
+                            <div class="form-group">
+                              <label for="txtContactPerson">Contact Person:</label>
+                              <input type="text" class="form-control" id="txtContactPerson" value="<%= detail.contact_person %>" placeholder="" disabled>
+                            </div>
+                            <div class="form-group">
+                              <label for="txtContactDesignation">Contact Designation:</label>
+                              <input type="text" class="form-control" id="txtContactDesignation" value="<%= detail.designation %>" placeholder="" disabled>
+                            </div>
+                            <div class="form-group">
+                              <label for="txtContactNumber">Contact Number:</label>
+                              <input type="text" class="form-control" id="txtContactNumber" value="<%= detail.contact_number %>" placeholder="" disabled>
+                            </div>
+                            <div class="form-group">
+                              <label for="txtContactEmail">Contact Email:</label>
+                              <input type="text" class="form-control" id="txtContactEmail" value="<%= detail.email_address %>" placeholder="" disabled>
+                            </div>
+                            <div class="form-group">
+                              <label for="txtBDOfficerName">BD Officer Name:</label>
+                              <input type="text" class="form-control" id="txtBDOfficerName" value="<%= detail.officer_name %>" placeholder="" disabled>
+                            </div>
+                          </div>
+                          <% } %>
+                        </div>
+                        <div class="col-md-12 d-flex flex-row justify-content-between mt-5">
+                          <% if (department == "Business Development") { %>
+                          <% if (userHasUpdateAccess) { %>
+                          <div>
+                            <button class="btn btn-warning mr-2" id="btnEdit">Edit</button>
+                            <span id="editOptions" style="display: none;">
+                              <button class="btn btn-success mr-2" data-toggle="modal" data-target="#saveModal">Save</button>
+                              <button class="btn btn-danger" id="btnEditCancel">Cancel</button>
+                            </span>
+                          </div>
+                          <% } %>
+                          <% if (department == "Business Development") { %>
+                          <% if (userHasSiteDeleteAccess) { %>
+                          <div>
+                            <button class="btn btn-danger mr-2" id="btnDelete"  data-toggle="modal" data-target="#deleteModal">Delete</button>
+                          </div>
+                          <% } %>
+                          <% } %>
+                          <% } %>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="tab-pane fade <%= (tab == "gallery") ? "show active" : "" %>" id="nav-photos" role="tabpanel" aria-labelledby="nav-photos-tab">
+                      <div class="col-md-12 mt-3"> 
+                        <div class="d-flex flex-row justify-content-between mb-4 mt-3">
+                          <h5>Site Gallery:</h5>
+                          <% if (department == "Business Development") { %>
+                          <% if (userHasCreateAccess) { %>
+                          <span>
+                            <a href="#" data-toggle="modal" class="btn btn-sm btn-info btn-icon-split" data-target="#uploadGalleryPhotoModal">
+                              <span class="icon text-white-50">
+                                <i class="fas fa-plus"></i>
+                              </span>
+                              <span class="text" id="">Add Photo</span>
+                            </a>
+                          </span>
+                          <% } %>
+                          <% } %>
+                        </div>
+                        <div class="col-md-12">
+                          <div class="d-flex flex-row flex-wrap justify-content-around site-img-div">
+                            <% if (photos.length > 0) { %>
+                              <% for (var i = 0; i < photos.length; i++) { %>
+                            <div class="col-sm-4 col-md-3 mb-3" id="photo_<%= photos[i].photo_id %>">
+                              <% if (department == "Business Development") { %>
+                              <% if (userHasDeleteAccess) { %>
+                              <div class="d-flex flex-row-reverse" style="width: 100%">
+                                <button class="btn btn-sm btn-danger" style="position: absolute; float: right" onclick="deleteSitePhoto(<%= photos[i].photo_id %>)"><i class="fas fa-trash"></i></button>
+                              </div>
+                              <% } %>
+                              <% } %>
+                              <img data-darkbox-group="site-photo" data-darkbox="<%= photos[i].url %>" src="<%= photos[i].url %>" id="sitePhoto_<%= photos[i].photo_id %>" class="lazyload img-round" style="width: 100%">
+                            </div>
+                              <% } %>
+                            <% } else { %>
+                            <div class="d-flex flex-row justify-content-around">
+                              <h5 class="m-5">No uploaded site photo in this site yet. Please contact Business Development to add.</h5>
+                            </div>
+                            <% } %>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="tab-pane fade <%= (tab == "execution") ? "show active" : "" %> site-form" id="nav-possible-execution" role="tabpanel" aria-labelledby="nav-possible-execution-tab">
+                      <div class="col-md-12 mt-3" id="listPossibleExecutionDiv">
+                        <div class="d-flex flex-row justify-content-between mb-4 mt-3">
+                          <h5>Site Possible Execution List:</h5>
+                          <% if (department == "Business Development") { %>
+                          <% if (userHasCreateAccess) { %>
+                          <span>
+                            <a href="#" data-toggle="modal" class="btn btn-sm btn-info btn-icon-split" id="btnAddPossibleExecutionFormToggle">
+                              <span class="icon text-white-50">
+                                <i class="fas fa-plus"></i>
+                              </span>
+                              <span class="text" id="">Add Possible Executions</span>
+                            </a>
+                          </span>
+                          <% } %>
+                          <% } %>
+                        </div>
+                        <div class="col-md-12">
+                          <div class="row table-responsive-md">
+                            <table class="table table-hover title-case">
+                              <thead>
+                                <tr>
+                                  <th scope="col">Category</th>
+                                  <th scope="col">Format</th>
+                                  <th scope="col">Measurement</th>
+                                  <%  if (department == "Business Development" || department == "Executives") { %>
+                                  <th scope="col">Business Dev. Rate</th>
+                                  <% } else if (department == "Sales" && userHasUpdateAccess) { %>
+                                  <th scope="col">Business Dev. Rate</th>
+                                  <% } %>
+                                  <%  if (department == "Sales" || department == "Executives") { %>
+                                  <th scope="col">Production Rate</th>
+                                  <% } %>
+                                  <%  if (department == "Sales" || department == "Executives") { %>
+                                  <th scope="col">Sales Rate</th>
+                                  <% } %>
+                                  <% if (userHasUpdateAccess && userHasDeleteAccess) { %>
+                                  <th scope="col"></th>
+                                  <% } %>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                <% if (possibleExecutions.length > 0) { %>
+                                <% for (var i = 0; i < possibleExecutions.length; i++) {  %>
+                                <tr id="possibleExecutionRow_<%= possibleExecutions[i].spe_id %>">
+                                  <td scope="row" id="txtSpeCategory_<%= possibleExecutions[i].spe_id %>"><%= possibleExecutions[i].category %></td>
+                                  <td id="txtSpeType_<%= possibleExecutions[i].spe_id %>"><%= possibleExecutions[i].type %></td>
+                                  <% if (department == "Business Development") { %>
+                                  <% if (userHasUpdateAccess) { %>
+                                  <td><input type="text" class="form-control" id="txtSpeMeasurement_<%= possibleExecutions[i].spe_id %>" value="<%= possibleExecutions[i].measurement %>"></td>
+                                  <% } else { %>
+                                  <td><input type="text" class="form-control" id="txtSpeMeasurement_<%= possibleExecutions[i].spe_id %>" value="<%= possibleExecutions[i].measurement %>" disabled></td>
+                                  <% } %>
+                                  <% } else { %>
+                                  <td><input type="text" class="form-control" id="txtSpeMeasurement_<%= possibleExecutions[i].spe_id %>" value="<%= possibleExecutions[i].measurement %>" disabled></td>
+                                  <% } %>
+                                  <% if (type == "partner") { %>
+                                  <% if (department == "Business Development") { %>
+                                  <% if (userHasUpdateAccess) { %>
+                                  <td><input type="text" class="form-control" id="txtSpeBDRate_<%= possibleExecutions[i].spe_id %>" value="<%= possibleExecutions[i].bd_rate %>"></td>
+                                  <% } else {%>
+                                  <td><input type="text" class="form-control" id="txtSpeBDRate_<%= possibleExecutions[i].spe_id %>" value="<%= possibleExecutions[i].bd_rate %>" disabled></td>
+                                  <% } %>
+                                  <% } else { %>
+                                  <% if (department == "Sales" && userHasUpdateAccess) { %>
+                                  <td><input type="text" class="form-control" id="txtSpeBDRate_<%= possibleExecutions[i].spe_id %>" value="<%= possibleExecutions[i].bd_rate %>" disabled></td>
+                                  <% } else if (department == "Executives") { %>
+                                  <td><input type="text" class="form-control" id="txtSpeBDRate_<%= possibleExecutions[i].spe_id %>" value="<%= possibleExecutions[i].bd_rate %>" disabled></td>
+                                  <% } %>
+                                  <% } %>
+                                  <% } else { %>
+                                  <% if (department == "Business Development") { %>
+                                  <td><input type="text" class="form-control" id="txtSpeBDRate_<%= possibleExecutions[i].spe_id %>" value="<%= possibleExecutions[i].bd_rate %>" disabled></td>
+                                  <% } else if (department == "Executives") { %>
+                                  <td><input type="text" class="form-control" id="txtSpeBDRate_<%= possibleExecutions[i].spe_id %>" value="<%= possibleExecutions[i].bd_rate %>" disabled></td>
+                                  <% } else if (department == "Sales" && userHasUpdateAccess) { %>
+                                  <td><input type="text" class="form-control" id="txtSpeBDRate_<%= possibleExecutions[i].spe_id %>" value="<%= possibleExecutions[i].bd_rate %>" disabled></td>
+                                  <% } %>
+                                  <% } %>
+                                  <% if (department == "Sales") { %>
+                                  <% if (userHasUpdateAccess) { %>
+                                  <td><input type="text" class="form-control" id="txtSpeProductionRate_<%= possibleExecutions[i].spe_id %>" value="<%= (possibleExecutions[i].production_rate) ? possibleExecutions[i].production_rate : "0" %>"></td>
+                                  <td><input type="text" class="form-control" id="txtSpeSalesRate_<%= possibleExecutions[i].spe_id %>" value="<%= (possibleExecutions[i].sales_rate) ? possibleExecutions[i].sales_rate : "0" %>"></td>
+                                  <% } else { %>
+                                  <td><input type="text" class="form-control" id="txtSpeProductionRate_<%= possibleExecutions[i].spe_id %>" value="<%= (possibleExecutions[i].production_rate) ? possibleExecutions[i].production_rate : "0" %>" disabled></td>
+                                  <td><input type="text" class="form-control" id="txtSpeSalesRate_<%= possibleExecutions[i].spe_id %>" value="<%= (possibleExecutions[i].sales_rate) ? possibleExecutions[i].sales_rate : "0" %>" disabled></td>
+                                  <% } %>
+                                  <% } else if (department == "Executives") { %>
+                                  <td><input type="text" class="form-control" id="txtSpeProductionRate_<%= possibleExecutions[i].spe_id %>" value="<%= (possibleExecutions[i].production_rate) ? possibleExecutions[i].production_rate : "0" %>" disabled></td>
+                                  <td><input type="text" class="form-control" id="txtSpeSalesRate_<%= possibleExecutions[i].spe_id %>" value="<%= (possibleExecutions[i].sales_rate) ? possibleExecutions[i].sales_rate : "0" %>" disabled></td>
+                                  <% } %>
+                                  <% if (userHasUpdateAccess || userHasDeleteAccess) { %>
+                                  <td>
+                                    <% if (department == "Business Development") { %>
+                                    <% if (userHasUpdateAccess) { %>
+                                    <button class="btn btn-sm btn-success mr-1" title="Save" onclick="savePossibleExecutionChanges(<%= possibleExecutions[i].spe_id %>)">Save</i></button>
+                                    <% } %>
+                                    <% } else if (department == "Sales") { %>
+                                    <% if (userHasUpdateAccess) { %>
+                                    <button class="btn btn-sm btn-success mr-1" title="Save" onclick="savePossibleExecutionChangesSales(<%= possibleExecutions[i].spe_id %>)">Save</i></button>
+                                    <% } %>
+                                    <% } %>
+                                    <% if (department == "Business Development") { %>
+                                    <% if (userHasDeleteAccess) { %>
+                                    <button class="btn btn-sm btn-danger" title="Delete" onclick="deletePossibleExecutionChanges(<%= possibleExecutions[i].spe_id %>)"><i class="fas fa-trash"></i></button>
+                                    <% } %>
+                                    <% } %>
+                                  </td>
+                                  <% } %>
+                                </tr>
+                                <% } %>
+                                <% } else { %>
+                                <tr>
+                                  <th scope="row" colspan="4">No possible execution found yet in this site. Please contact Business Development to add.</th>
+                                </tr>
+                                <% } %>
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+                      </div>
+                      <% if (department == "Business Development") { %>
+                      <% if (userHasCreateAccess) { %>
+                      <div class="col-md-12 mt-3 mb-4" id="addPossibleExecutionDiv" style="display: none;">
+                        <div class="row">
+                          <h5>Site Possible Execution:<a href="#" data-toggle="modal" class="btn btn-sm btn-info btn-icon-split ml-5" data-target="#addExecutionModal" id="btnAddExecutionToggle">
+                            <span class="icon text-white-50">
+                              <i class="fas fa-plus" id=""></i>
+                            </span>
+                            <span class="text" id="">Add Execution Format</span>
+                          </a></h5>
+                          <div class="col-md-12">
+                            <div class="row">
+                              <div class="col-md-6">
+                                <div class="form-group">
+                                  <label for="selectPossibleExecutionCategory">Category: <span style="color: red;">*</span></label>
+                                  <select class="form-control title-case" id="selectPossibleExecutionCategory" onchange="setPossibleExecutionFormat()"></select>
+                                </div>
+                                <div class="form-group">
+                                  <label for="selectPossibleExecutionFormat">Format: <span style="color: red;">*</span></label>
+                                  <select class="form-control title-case" id="selectPossibleExecutionFormat"></select>
+                                </div>
+                                <div class="form-group">
+                                  <label for="txtPossibleExecutionMeasurement">Measurement: <span style="color: red;">*</span></label>
+                                  <input type="text" class="form-control" id="txtPossibleExecutionMeasurement" placeholder="">
+                                </div>
+                                <div class="form-group">
+                                  <label for="txtPossibleExecutionRentalRate">Rental Rate: <% if (type == "partner") { %><span style="color: red;">*</span><% } %></label>
+                                  <input type="number" class="form-control" id="txtPossibleExecutionRentalRate" placeholder="">
+                                </div>
+                                <button type="button" class="btn btn-md btn-success" onclick="addSelectedPossibleExecution()">Add</button>
+                              </div>
+                              <div class="col-md-6">
+                                <div class="col-md-12">
+                                  <div class="form-group">
+                                    <label>Selected Possible Execution:</label><br />
+                                    <div class="d-flex flex-wrap justify-content-around" id="txtSelectedPossibleExecution">
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-md-12 mt-5">
+                            <hr />
+                            <div class="d-flex flex-row justify-content-center">
+                              <button class="btn btn-success col-md-9 mr-1" onclick="saveSeletectedPossibleExecution(<%= detail.site_id %>)">Save Selected Possible Executions</button>
+                              <button class="btn btn-danger col-md-2"  id="btnAddPossibleExecutionFormCancel">Cancel</button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <% } %>
+                      <% } %>
+                    </div>
+                    <div class="tab-pane <%= (tab == "projects") ? "show active" : "" %> fade" id="nav-past-projects" role="tabpanel" aria-labelledby="nav-past-projects-tab">
+                      <div class="col-md-12 mt-3"> 
+                        <div class="d-flex flex-row justify-content-between mb-4 mt-3">
+                          <h5>Past Project Photos:</h5>
+                          <% if (department == "Business Development") { %>
+                          <% if (userHasCreateAccess) { %>
+                          <span>
+                            <a href="#" data-toggle="modal" class="btn btn-sm btn-info btn-icon-split" data-target="#uploadPastProjectPhotoModal">
+                              <span class="icon text-white-50">
+                                <i class="fas fa-plus"></i>
+                              </span>
+                              <span class="text" id="">Add Photo</span>
+                            </a>
+                          </span>
+                          <% } %>
+                          <% } %>
+                        </div>
+                        <div class="col-md-12">
+                          <div class="d-flex flex-row flex-wrap justify-content-around site-img-div">
+                            <% if (pp_photos.length > 0) { %>
+                              <% for (var i = 0; i < pp_photos.length; i++) { %>
+                            <div class="col-sm-4 col-md-3 mb-3" id="pp_photo_<%= pp_photos[i].photo_id %>">
+                              <% if (department == "Business Development") { %>
+                              <% if (userHasDeleteAccess) { %>
+                              <div class="d-flex flex-row-reverse" style="width: 100%">
+                                <button class="btn btn-sm btn-danger" style="position: absolute; float: right" onclick="deleteSitePastProjectPhoto(<%= pp_photos[i].photo_id %>)"><i class="fas fa-trash"></i></button>
+                              </div>
+                              <% } %>
+                              <% } %>
+                              <img data-darkbox="<%= pp_photos[i].url %>" data-darkbox-group="project-photo" src="<%= pp_photos[i].url %>" id="sitePastProjectPhoto_<%= pp_photos[i].photo_id %>" class="lazyload img-round" style="width: 100%">
+                            </div>
+                              <% } %>
+                            <% } else { %>
+                            <div class="d-flex flex-row justify-content-around">
+                              <h5 class="m-5">No uploaded past project photo in this site yet. Please contact Business Development to add.</h5>
+                            </div>
+                            <% } %>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="tab-pane <%= (tab == "map") ? "show active" : "" %> fade" id="nav-map" role="tabpanel" aria-labelledby="nav-map-tab">
+                      <div class="col-md-12 mt-3"> 
+                        <div class="d-flex flex-row justify-content-between mb-2 mt-3">
+                          <h5>Map</h5>
+                        </div>
+                        <div class="col-md-12 p-0" style="height: 768px">
+                          <div id="map"></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+        <!-- /.container-fluid -->
+
+      </div>
+      <!-- End of Main Content -->
+
+      <% if (department == "Business Development") { %>
+      <% if (userHasCreateAccess) { %>
+      <div class="modal fade" id="uploadGalleryPhotoModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Upload Gallery Photo</h5>
+              <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">×</span>
+              </button>
+            </div>
+            <form method="POST" action="/api/site/gallery" enctype="multipart/form-data">
+              <div class="modal-body">
+                  <div class="form-group">
+                    <label for="exampleFormControlFile1">Site Photo</label>
+                    <input type="file" class="form-control-file" name="file" accept="image/*" required>
+                    <input type="text" value="<%= detail.site_id %>" name="site_id" style="display: none;">
+                    <input type="text" value="" name="tab" id="txtSitePhotoTab" style="display: none;">
+                  </div>
+              </div>
+              <div class="modal-footer">
+                <button class="btn btn-danger" type="button" data-dismiss="modal">Cancel</button>
+                <button id="btnAddExecution" class="btn btn-primary" type="submit">Upload</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      <% } %>
+      <% } %>
+
+      <% if (department == "Business Development") { %>
+      <% if (userHasCreateAccess) { %>
+      <div class="modal fade" id="uploadPastProjectPhotoModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Upload Past Project Execution Photo</h5>
+              <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">×</span>
+              </button>
+            </div>
+            <form method="POST" action="/api/site/past-project" enctype="multipart/form-data">
+              <div class="modal-body">
+                  <div class="form-group">
+                    <label for="exampleFormControlFile1">Project Photo</label>
+                    <input type="file" class="form-control-file" name="file" accept="image/*" required>
+                    <input type="text" value="<%= detail.site_id %>" name="site_id" style="display: none;">
+                    <input type="text" value="" name="tab" id="txtPastProjectPhotoTab" style="display: none;">
+                  </div>
+              </div>
+              <div class="modal-footer">
+                <button class="btn btn-danger" type="button" data-dismiss="modal">Cancel</button>
+                <button id="btnAddExecution" class="btn btn-primary" type="submit">Upload</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      <% } %>
+      <% } %>
+
+      <% if (department == "Business Development") { %>
+      <% if (userHasCreateAccess) { %>
+      <div class="modal fade" id="addExecutionModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Add Possible Execution Format</h5>
+              <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">×</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <form>
+                <div class="form-group">
+                  <label for="addExecutionCategory">Category:</label>
+                  <select class="form-control title-case" id="addExecutionCategory" onchange="checkExecutionCategory()"></select>
+                </div>
+                <div class="form-group"id="addExecutionNewCategoryContainer" style="display: none;">
+                  <label for="addExecutionNewCategory">New Category:</label>
+                  <input type="text" class="form-control" id="addExecutionNewCategory" placeholder="">
+                </div>
+                <div class="form-group">
+                  <label for="addExecutionFormat">Format:</label>
+                  <input type="text" class="form-control" id="addExecutionFormat" placeholder="">
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button class="btn btn-danger" type="button" data-dismiss="modal">Cancel</button>
+              <button id="btnAddExecution" class="btn btn-primary" type="button" onclick="addNewExecution()">Add</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <% } %>
+      <% } %>
+
+      <% if (department == "Business Development") { %>
+      <% if (userHasUpdateAccess) { %>
+      <div class="modal fade" id="saveModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Save Changes?</h5>
+              <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">×</span>
+              </button>
+            </div>
+            <div class="modal-body">Are you really sure to save changes in this site?</div>
+            <div class="modal-footer">
+              <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+              <a class="btn btn-primary" id="btnEditSave" href="#">Save</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <% } %>
+      <% } %>
+
+      <% if (department == "Business Development") { %>
+      <% if (userHasSiteDeleteAccess) { %>
+      <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Delete Site?</h5>
+              <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">×</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <h4>Are you really sure to delete this site?</h4>
+              <div class="form-group mt-3">
+                <label for="txtDeleteSiteId">Enter Site ID:</label>
+                <input type="number" class="form-control" id="txtDeleteSiteId" placeholder="">
+              </div>
+              <!-- <small class="mt-5"><b>Note:</b> You need to delete all <b>Site Photos</b>, <b>Possible Executions</b> and <b>Past Project Photos</b> of this site before able to delete this site.</small> -->
+            </div>
+            <div class="modal-footer">
+              <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+              <a class="btn btn-danger" id="btnDeleteSite" href="#">Delete</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <% } %>
+      <% } %>
+
+      <%- include("partials/footer") %>
+
+    </div>
+    <!-- End of Content Wrapper -->
+
+  </div>
+  <!-- End of Page Wrapper -->
+
+  <!-- Scroll to Top Button-->
+  <a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+  </a>
+
+  <!-- Bootstrap core JavaScript-->
+  <script src="/vendor/jquery/jquery.min.js"></script>
+  <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Core plugin JavaScript-->
+  <script src="/vendor/jquery-easing/jquery.easing.min.js"></script>
+
+  <!-- Custom scripts for all pages-->
+  <script src="/js/sb-admin-2.min.js"></script>
+
+  <!-- Page level plugins -->
+  <script src="/vendor/datatables/jquery.dataTables.min.js"></script>
+  <script src="/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+
+  <!-- Page level custom scripts -->
+  <script src="/js/demo/datatables-demo.js"></script>
+  <script src="/js/toastr.min.js"></script>
+  <script src="/js/darkbox.min.js"></script>
+  <script src="/js/lazyload.js"></script>
+
+  <script src="/js/cities.js"></script> 
+  <script src="/js/provinces.js"></script> 
+  <script src="/js/regions.js"></script>
+  <script src="/js/notifications.js"></script>
+  <script src="/js/site.js"></script>
+
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAppPFcfzyJyLxd4h__Hi-dpG50oCXuc0w&callback=initMap"
+  async defer></script>
+
+</body>
+
+</html>

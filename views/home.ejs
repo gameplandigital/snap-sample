@@ -1,0 +1,432 @@
+<%- include("partials/header") %>
+
+<body id="page-top">
+
+  <!-- Page Wrapper -->
+  <div id="wrapper">
+
+    <%- include("partials/sidebar"); %>
+
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+
+      <!-- Main Content -->
+      <div id="content">
+
+        <%- include("partials/topbar") %>
+
+        <!-- Begin Page Content -->
+        <div class="container-fluid">
+
+          <div class="loading" id="loading-screen"><%= department %></div>
+
+          <!-- Page Heading -->
+          <div class="d-sm-flex align-items-center justify-content-between mb-4">
+            <h1 class="h3 mb-0 text-gray-800">Home</h1>
+            <%# <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-download fa-sm text-white-50"></i> Generate Report</a> %>
+          </div>
+
+          <!-- Content Row -->
+          <div class="row">
+
+            <!-- Earnings (Monthly) Card Example -->
+            <div class="col-sm-6 col-xl-3 col-md-6 mb-4">
+              <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                      <%
+                        var ts = 0;
+                        for (var i = 0; i < sites.length; i++) {
+                          var t1 = new Date(sites[i].contract_duration_to).getTime(),
+                          t2 = new Date(moment().format("YYYY/MM/DD HH:mm:ss")).getTime();
+
+                          var nod = parseInt((t2 - t1)/(24 * 3600 * 1000));
+                          if (nod <= 0) {
+                            ts++;
+                          }
+                        }
+                      %>
+                      <div class="d-flex flex-column align-items-center">
+                        <div class="h1 mb-0 font-weight-bold text-gray-800 justify-content-center">
+                          <%= sites.length.toLocaleString() %></div>
+                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Total Sites</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <% if (department == "Business Development" || department == "Executives") { %>
+            <!-- Earnings (Monthly) Card Example -->
+            <div class="col-sm-6 col-xl-3 col-md-6 mb-4">
+              <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                      <div class="d-flex flex-column align-items-center">
+                        <div class="h1 mb-0 font-weight-bold text-gray-800"><%= sites.length.toLocaleString() %></div>
+                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Unsold Sites</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <% } %>
+
+            <% if (department == "Sales") { %>
+            <!-- Earnings (Monthly) Card Example -->
+            <div class="col-sm-6 col-xl-3 col-md-6 mb-4">
+              <div class="card border-left-warning shadow h-100 py-2">
+                <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                      <%
+                        var propertyCount = 0;
+
+                        for (var i = 0; i < sites.length; i++) {
+                          if (sites[i].type == "property") {
+                            propertyCount++;
+                          }
+                        }
+                      %>
+                      <div class="d-flex flex-column align-items-center">
+                        <div class="h1 mb-0 font-weight-bold text-gray-800"><%= propertyCount.toLocaleString() %></div>
+                        <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Total Properties</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <% } %>
+
+            <% if (department == "Sales") { %>
+            <!-- Earnings (Monthly) Card Example -->
+            <div class="col-sm-6 col-xl-3 col-md-6 mb-4">
+              <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                      <%
+                        var partnerCount = 0;
+
+                        for (var i = 0; i < sites.length; i++) {
+                          if (sites[i].type == "partner") {
+                            partnerCount++;
+                          }
+                        }
+                      %>
+                      <div class="d-flex flex-column align-items-center">
+                        <div class="h1 mb-0 font-weight-bold text-gray-800"><%= partnerCount.toLocaleString() %></div>
+                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Total Partners</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <% } %>
+
+            <!-- Earnings (Monthly) Card Example -->
+            <div class="col-sm-6 col-xl-3 col-md-6 mb-4">
+              <div class="card border-left-info shadow h-100 py-2">
+                <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                      <%
+                        var nas = 0;
+                        fd = moment().startOf("month").format("YYYY/MM/DD HH:mm:ss"),
+                        ld = moment().endOf("month").format("YYYY/MM/DD HH:mm:ss");
+
+                        for (var i = 0; i < sites.length; i++) {
+                          var cd = sites[i].contract_duration_from;
+                          if (moment(cd).isBetween(fd, ld, null, '()')) {
+                            nas++;
+                          }
+                        }
+                      %>
+                      <div class="d-flex flex-column align-items-center">
+                        <div class="h1 mb-0 font-weight-bold text-gray-800"><%= nas.toLocaleString() %></div>
+                        <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Newly Acquired Sites</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <% if (department == "Business Development" || department == "Executives") { %>
+            <!-- Pending Requests Card Example -->
+            <div class="col-sm-6 col-xl-3 col-md-6 mb-4">
+              <div class="card   shadow h-100 py-2">
+                <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                      <%
+                        var wes = 0,
+                        fd = moment().startOf("month").format("YYYY/MM/DD HH:mm:ss"),
+                        ld = moment().endOf("month").format("YYYY/MM/DD HH:mm:ss");
+
+                        for (var i = 0; i < sites.length; i++) {
+                          var cd = sites[i].contract_duration_to;
+                          if (moment(cd).isBetween(fd, ld, null, '()')) {
+                            wes++;
+                          }
+                        }
+                      %>
+                      <div class="d-flex flex-column align-items-center">
+                        <div class="h1 mb-0 font-weight-bold text-gray-800"><%= wes.toLocaleString() %></div>
+                        <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Soon to expire sites
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <% } %>
+          </div>
+
+          <div class="accordion" id="mapFilters">
+            <div class="card">
+              <div class="card-header" id="headingOne">
+                <h2 class="mb-0">
+                  <button class="btn btn-link" id="btnMapFiltersCollapse" type="button" data-toggle="collapse"
+                    data-target="#mapFiltersCollapse" aria-expanded="true" aria-controls="mapFiltersCollapse">
+                    <i class="fas fa-chevron-down mr-5" id="btnFilterChevron"></i>&nbsp;Map Filters
+                  </button>
+                </h2>
+              </div>
+
+              <div id="mapFiltersCollapse" class="collapse" aria-labelledby="headingOne" data-parent="#mapFilters">
+                <div class="card-body d-flex flex-row flex-wrap">
+                  <div class="col-sm-12 col-md-12 d-flex flex-row flex-wrap site-form">
+                    <div class="form-group col-md-4">
+                      <label for="exampleFormControlSelect1">Region</label>
+                      <select class="form-control" id="selectFilterRegion" onchange="setFilterProvince()">
+                      </select>
+                    </div>
+                    <div class="form-group col-md-4">
+                      <label for="exampleFormControlSelect1">Province</label>
+                      <select class="form-control" id="selectFilterProvince" onchange="setFilterMunicipalityCity()">
+                      </select>
+                    </div>
+                    <div class="form-group col-md-4">
+                      <label for="exampleFormControlSelect1">Municipality/City</label>
+                      <select class="form-control" id="selectFilterMunicipalityCity">
+                      </select>
+                    </div>
+                    <div class="form-group col-md-3">
+                      <label for="exampleFormControlSelect1">Type</label>
+                      <select class="form-control" id="selectFilterType" onchange="setFilterCategory()">
+                        <option value="all">All</option>
+                        <option value="property">Property</option>
+                        <option value="partner">Partner</option>
+                      </select>
+                    </div>
+                    <div class="form-group col-md-3">
+                      <label for="exampleFormControlSelect1">Category</label>
+                      <select class="form-control title-case" id="selectFilterCategory">
+                        <option value="all">All</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-md-12">
+                    <div class="d-flex flex-row justify-content-between align-items-end flex-wrap mt-2">
+                      <span class="site-form">Total Locations: <span class="ml-3" id="txtTotalSites"
+                          style="font-size: 1rem"><b>0</b></span></span>
+                      <button type="button" class="btn btn-sm btn-info" id="btnFilter"
+                        onclick="filterSites()">Run</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Content Row -->
+          <div class="row">
+            <div class="col-md-12 mb-5">
+              <div id="map" style="height: 768px"></div>
+              <div>
+              </div>
+
+            </div>
+            <!-- /.container-fluid -->
+
+          </div>
+          <!-- End of Main Content -->
+
+          <div class="modal fade" id="siteModal" tabindex="-1" role="dialog" aria-labelledby="siteModalTitle"
+            aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="siteModalTitle">Site</h5>
+                  <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <div class="d-flex flex-row flex-wrap">
+                    <div class="col-md-12">
+                      <div id="sitePhotoIndicators" class="carousel slide" data-ride="carousel">
+                        <ol class="carousel-indicators" id="carousel-indicators">
+                        </ol>
+                        <div class="carousel-inner" id="carousel-inner">
+                        </div>
+                        <a class="carousel-control-prev" href="#sitePhotoIndicators" role="button" data-slide="prev">
+                          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                          <span class="sr-only">Previous</span>
+                        </a>
+                        <a class="carousel-control-next" href="#sitePhotoIndicators" role="button" data-slide="next">
+                          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                          <span class="sr-only">Next</span>
+                        </a>
+                      </div>
+                    </div>
+                    <div class="col-md-6 mt-3">
+                      <table class="w-100">
+                        <tr>
+                          <td class="miw-c1"><b>Type</b></td>
+                          <td id="dType">Property</td>
+                        </tr>
+                        <tr>
+                          <td class="miw-c1"><b>Category</b></td>
+                          <td id="dCategory">Aircast</td>
+                        </tr>
+                        <tr>
+                          <td class="miw-c1"><b>Sub Category</b></td>
+                          <td id="dSubCategory">BPO</td>
+                        </tr>
+                        <tr>
+                          <td class="miw-c1"><b>Name</b></td>
+                          <td id="dName">Hinduja Global Solution 1880 Bldg.</td>
+                        </tr>
+                        <tr>
+                          <td class="miw-c1"><b>Foot Traffic</b></td>
+                          <td id="dFootTraffic">1,200,000</td>
+                        </tr>
+                      </table>
+                    </div>
+                    <div class="col-md-6 mt-3">
+                      <table class="w-100">
+                        <tr>
+                          <td class="miw-c1"><b>Region</b></td>
+                          <td id="dRegion">NCR</td>
+                        </tr>
+                        <tr>
+                          <td class="miw-c1"><b>Province</b></td>
+                          <td id="dProvince">Metro Manila</td>
+                        </tr>
+                        <tr>
+                          <td class="miw-c1"><b>Municipality</b></td>
+                          <td id="dMunicipality">Quezon</td>
+                        </tr>
+                        <tr>
+                          <td class="miw-c1"><b>Address</b></td>
+                          <td id="dAddress">74 Don A Roces ave cor Sct Santiago, Brgy Obrero</td>
+                        </tr>
+                      </table>
+                    </div>
+                    <div class="col-md-12 mt-3" id="possibleExecutionTable">
+                      <hr />
+                      <h5><b>Possible Executions:</b></h5>
+                      <div class="table-responsive">
+                        <table class="table table-hover w-100">
+                          <thead class="bg-info text-white">
+                            <tr>
+                              <th scope="col">#</th>
+                              <th scope="col">Format</th>
+                              <th scope="col">Measurement</th>
+                              <% if (department == "Business Development" || department == "Sales") { %>
+                              <th scope="col">Rate</th>
+                              <% } else if (department == "Executives") { %>
+                              <th scope="col">BD Rate</th>
+                              <th scope="col">Sales Rate</th>
+                              <% } %>
+                              <th scope="col"></th>
+                            </tr>
+                          </thead>
+                          <tbody id="possibleExecutionBody" class="small">
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                    <div class="col-md-12 mt-3" id="possibleExecutionPhotos" style="display: none">
+                      <hr />
+                      <div class="w-100 d-flex flex-row justify-content-between">
+                        <h5><b>Possible Execution:</b></h5>
+                        <span>
+                          <span class="btn btn-info btn-icon-split btn-sm" style="cursor: pointer;">
+                            <span class="icon text-white-50">
+                              <i class="fas fa-chevron-left"></i>
+                            </span>
+                            <span class="text" id="btnBackToPossibleExecution">View List</span>
+                          </span>
+                        </span>
+                      </div>
+                      <small id="possibleExecutionPhotoTitle">Execution</small>
+                      <div class="w-100 mt-3">
+                        <h6 class="text-center"><b> - Photos - </b></h6>
+                        <div class="past-project col-md-12 d-flex flex-row flex-wrap justify-content-around"
+                          id="sitePhotosDiv">
+                        </div>
+                      </div>
+                      <br />
+                      <div class="w-100 mt-3">
+                        <h6 class="text-center"><b> - Past Project Photos - </b></h6>
+                        <div class="past-project col-md-12 d-flex flex-row flex-wrap justify-content-around"
+                          id="siteProjectPhotosDiv">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button class="btn btn-secondary" type="button" data-dismiss="modal">Close</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <!-- End of Content Wrapper -->
+
+
+        <%- include("partials/footer") %>
+
+      </div>
+      <!-- End of Page Wrapper -->
+
+      <!-- Scroll to Top Button-->
+      <%# <a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+  </a> %>
+
+      <!-- Bootstrap core JavaScript-->
+      <script src="/vendor/jquery/jquery.min.js"></script>
+      <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+      <!-- Core plugin JavaScript-->
+      <script src="/vendor/jquery-easing/jquery.easing.min.js"></script>
+
+      <!-- Custom scripts for all pages-->
+      <script src="/js/sb-admin-2.min.js"></script>
+      <script src="/js/darkbox.min.js"></script>
+      <script src="/js/lazyload.js"></script>
+      <script src="/js/cities.js"></script>
+      <script src="/js/provinces.js"></script>
+      <script src="/js/regions.js"></script>
+
+      <script src="/js/notifications.js"></script>
+      <script src="/js/home.js"></script>
+      <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAppPFcfzyJyLxd4h__Hi-dpG50oCXuc0w&callback=initMap"
+        async defer></script>
+
+</body>
+
+</html>

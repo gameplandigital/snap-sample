@@ -1,0 +1,77 @@
+<!-- Sidebar -->
+    <ul class="navbar-nav bg-gradient-info sidebar sidebar-dark accordion toggled" id="accordionSidebar">
+
+      <!-- Sidebar - Brand -->
+      <a class="sidebar-brand d-flex align-items-center justify-content-center" href="#">
+        <div class="sidebar-brand-icon rotate-n-15">
+          <img src="/img/icon.png"  width="50" height="50" alt="">
+          <%# <i class="fas fa-laugh-wink"></i> %>
+        </div>
+        <div class="sidebar-brand-text mx-3">Gameplan</div>
+      </a>
+
+      <!-- Divider -->
+      <hr class="sidebar-divider my-0">
+
+      <!-- Nav Item - Dashboard -->
+     
+      <%# <li class="nav-item">
+        <a class="nav-link" href="/dashboard">
+          <i class="fas fa-fw fa-tachometer-alt"></i>
+          <span>Dashboard</span></a>
+      </li> %>
+
+      <!-- Divider -->
+      <hr class="sidebar-divider"> %>
+
+      <!-- Heading -->
+      <div class="sidebar-heading">
+        Navigation
+      </div>
+
+      <li class="nav-item<%= (location == "home") ? " active" : ""  %>">
+        <a class="nav-link" href="/home">
+          <i class="fas fa-fw fa-home"></i>
+          <span>Home</span></a>
+      </li>
+
+      <li class="nav-item<%= (location == "site-management") ? " active" : ""  %>">
+        <a class="nav-link" href="/site-management">
+          <i class="fas fa-fw fa-location-arrow"></i>
+          <span>Site Management</span></a>
+      </li>
+
+      <% if (department == "Business Development" || department == "Executives") { %>
+      <% if (role == "admin") { %>
+      <li class="nav-item<%= (location == "archive") ? " active" : ""  %>">
+        <a class="nav-link" href="/archive">
+          <i class="fas fa-fw fa-archive"></i>
+          <span>Archive</span></a>
+      </li>
+      <% } %>
+      <% } %>
+
+      <%# <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseSiteManagement" aria-expanded="true" aria-controls="collapseSiteManagement">
+          <i class="fas fa-fw fa-location-arrow"></i>
+          <span>Site Management</span>
+        </a>
+        <div id="collapseSiteManagement" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+          <div class="bg-white py-2 collapse-inner rounded">
+            <h6 class="collapse-header">TYPE:</h6>
+            <a class="collapse-item" href="/site-management/property">Properties</a>
+            <a class="collapse-item" href="/site-management/partner">Partners</a>
+          </div>
+        </div>
+      </li> %>
+
+      <!-- Divider -->
+      <hr class="sidebar-divider">
+
+       <!-- Sidebar Toggler (Sidebar) -->
+      <%# <div class="text-center d-none d-md-inline">
+        <button class="rounded-circle border-0" id="sidebarToggle"></button>
+      </div> %>
+
+    </ul>
+    <!-- End of Sidebar -->

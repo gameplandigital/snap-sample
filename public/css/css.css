@@ -1,0 +1,156 @@
+.card {
+  border-radius: 5px;
+}
+
+.img-round-top {
+  border-radius: 5px 5px 0 0;
+}
+
+.img-round {
+  border-radius: 5px 5px 5px 5px;
+}
+
+.card h5 {
+  text-transform: capitalize;
+}
+
+.hover:hover {
+  cursor: pointer;
+  z-index: 2;
+  -webkit-transition: all 200ms ease-in;
+  -webkit-transform: scale(1.05);
+  -ms-transition: all 200ms ease-in;
+  -ms-transform: scale(1.05);
+  -moz-transition: all 200ms ease-in;
+  -moz-transform: scale(1.05);
+  transition: all 200ms ease-in;
+  transform: scale(1.05);
+}
+
+.directory-nav {
+  font-size: 0.9rem;
+}
+
+.site-table {
+  font-size: 0.7rem;
+}
+
+.site-table label {
+  width: 75%;
+}
+
+.site-table tr {
+  cursor: pointer;
+}
+
+.site-table tr:hover {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.site-form {
+  font-size: 0.7rem;
+}
+
+.site-form input {
+  font-size: 0.7rem;
+}
+
+.site-form select {
+  font-size: 0.7rem;
+}
+
+.site-form textarea {
+  font-size: 0.7rem;
+}
+
+.title-case {
+  text-transform: capitalize;
+}
+
+.upper-case {
+  text-transform: uppercase;
+}
+
+#map {
+  height: 100%;
+}
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.site-img-div img {
+  cursor: pointer;
+}
+
+.miw-c1 {
+  width: 40%;
+  font-weight: bold;
+}
+
+.miw-c2 {
+  width: 60%;
+}
+
+.map-options {
+  background-color: white;
+  padding: 15px;
+}
+
+.map-options {
+  font-size: 12px;
+}
+
+.past-project img {
+  cursor: zoom-in;
+}
+
+#possibleExecutionBody tr {
+  cursor: pointer;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-button {
+  width: 0px;
+  height: 0px;
+}
+::-webkit-scrollbar-thumb {
+  background: #33afc1;
+  border: 0px none #ffffff;
+  border-radius: 50px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #2d9cac;
+}
+::-webkit-scrollbar-thumb:active {
+  background: #2fa0b0;
+}
+::-webkit-scrollbar-track {
+  background: #ffffff;
+  border: 0px none #ffffff;
+  border-radius: 50px;
+}
+::-webkit-scrollbar-track:hover {
+  background: #ffffff;
+}
+::-webkit-scrollbar-track:active {
+  background: #ffffff;
+}
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+.not-seen {
+  background-color: #dce5f2;
+}
+
+@media only screen and (min-height: 1000px) {
+  .modal-lg {
+    max-width: 90% !important;
+  }
+}
